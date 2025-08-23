@@ -1,12 +1,10 @@
 package org.example;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-    private static ArrayList<Animal> animals = new ArrayList<>();
+    private static ArrayList<AbsAnimal> absAnimals = new ArrayList<>();
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -50,11 +48,11 @@ public class Main {
         System.out.println("Какого цвета ваше животное?");
         String inputColor = scanner.nextLine();
 
-        Animal newAnimal = null;
+        AbsAnimal newAbsAnimal = null;
         switch (inputAnimal) {
             case "cat":
-                newAnimal = new Cat(inputName, inputAge, inputWeight, inputColor);
-                newAnimal.say();
+                newAbsAnimal = new Cat(inputName, inputAge, inputWeight, inputColor);
+                newAbsAnimal.say();
                 break;
             case "dog":
                 Dog dog = new Dog(inputName, inputAge, inputWeight, inputColor);
@@ -67,18 +65,18 @@ public class Main {
                 System.out.println("Неизвестный тип животного: " + inputAnimal);
                 return;
         }
-        if (newAnimal != null) {
-            newAnimal.say();
-            animals.add(newAnimal);
+        if (newAbsAnimal != null) {
+            newAbsAnimal.say();
+            absAnimals.add(newAbsAnimal);
             System.out.println("Вы успешно добавили животное в список!");
         }
     }
 
     public static void animalsToList() {
-        if (animals.isEmpty())
+        if (absAnimals.isEmpty())
             System.out.println("Список животных пуст");
-        for (Animal animal : animals) {
-            System.out.println("Список добавленных вами животных: " + "\n" + animal);
+        for (AbsAnimal absAnimal : absAnimals) {
+            System.out.println("Список добавленных вами животных: " + "\n" + absAnimal);
         }
     }
 }

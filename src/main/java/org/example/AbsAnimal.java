@@ -1,12 +1,12 @@
 package org.example;
 
-public class Animal {
+public abstract class AbsAnimal {
     private String name;
     private int age;
-    private long weight;
+    private float weight;
     private String color;
 
-    public Animal(String name, int age, long weight, String color) {
+    public AbsAnimal(String name, int age, long weight, String color) {
         this.name = name;
         this.age = age;
         this.weight = weight;
@@ -45,7 +45,7 @@ public class Animal {
         this.age = age;
     }
 
-    public long getWeight() {
+    public float getWeight() {
         return weight;
     }
 
@@ -80,7 +80,8 @@ public class Animal {
 
     @Override
     public String toString() {
-        return "Привет! Меня зовут " + name + ", мне " + age + getAgeContext(age)
-                + " , я вешу - " + weight + "кг, мой цвет - " + color;
+        String ageContext = getAgeContext(age);
+        return String.format("Привет! Меня зовут %s, мне %d%s, я вешу - %d кг, мой цвет - %s",
+                name, age, ageContext, weight, color);
     }
 }
