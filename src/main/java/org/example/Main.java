@@ -25,6 +25,10 @@ public class Main {
                         break;
                     case LIST:
                         animalsToList();
+                    case EXIT:
+                        System.out.println("Спасибо за использование нашего приложения! До скорых встреч!");
+                        scanner.close();
+
                 }
             } catch (IllegalArgumentException e) {
                 System.out.println("Вы ввели неизвестную команду");
