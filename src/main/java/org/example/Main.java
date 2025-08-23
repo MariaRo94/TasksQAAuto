@@ -28,7 +28,7 @@ public class Main {
                     case EXIT:
                         System.out.println("Спасибо за использование нашего приложения! До скорых встреч!");
                         scanner.close();
-
+                        return;
                 }
             } catch (IllegalArgumentException e) {
                 System.out.println("Вы ввели неизвестную команду");
