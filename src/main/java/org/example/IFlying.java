@@ -1,6 +1,6 @@
 package org.example;
 
-public interface Flying {
+public interface IFlying {
     public static void fly(){
     }
 }
