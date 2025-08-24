@@ -6,7 +6,7 @@ public class Duck extends AbsAnimal implements IFlying {
         super(name, age, weight, color);
     }
 
-    public static void fly(){
+    public static void fly() {
         System.out.println("Я лечу!");
     }
 

@@ -17,15 +17,15 @@ public abstract class AbsAnimal {
         System.out.println("Я говорю");
     }
 
-    public void go(){
+    public void go() {
         System.out.println("Я иду");
     }
 
-    public void drink(){
+    public void drink() {
         System.out.println("Я пью");
     }
 
-    public void eat (){
+    public void eat() {
         System.out.println("Я ем");
     }
 
@@ -68,14 +68,11 @@ public abstract class AbsAnimal {
         if (lastTwoDigits >= 11 && lastTwoDigits <= 14) {
             return " лет";
         }
-        switch (lastDigit) {
-            case 1:
-                return " год";
-            case 2, 3, 4:
-                return " года";
-            default:
-                return " лет";
-        }
+        return switch (lastDigit) {
+            case 1 -> " год";
+            case 2, 3, 4 -> " года";
+            default -> " лет";
+        };
     }
 
     @Override
