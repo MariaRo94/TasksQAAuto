@@ -3,7 +3,7 @@ package org.example;
 public abstract class AbsAnimal {
     private String name;
     private int age;
-    private float weight;
+    private long weight;
     private String color;
 
     public AbsAnimal(String name, int age, long weight, String color) {
