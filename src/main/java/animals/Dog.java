@@ -1,4 +1,4 @@
-package org.example;
+package animals;
 
 public class Dog extends AbsAnimal {
 

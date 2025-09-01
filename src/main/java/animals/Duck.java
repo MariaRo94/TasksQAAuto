@@ -1,4 +1,4 @@
-package org.example;
+package animals;
 
 public class Duck extends AbsAnimal implements IFlying {
 
@@ -6,7 +6,8 @@ public class Duck extends AbsAnimal implements IFlying {
         super(name, age, weight, color);
     }
 
-    public static void fly() {
+    @Override
+    public void fly() {
         System.out.println("Я лечу!");
     }
 

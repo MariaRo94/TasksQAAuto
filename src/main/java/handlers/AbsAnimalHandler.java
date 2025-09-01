@@ -1,11 +1,13 @@
-package org.example;
+package handlers;
+
+import validation.InputValidator;
 
 import java.util.Scanner;
 
 public class AbsAnimalHandler {
-    static Scanner scanner = new Scanner(System.in);
+    private Scanner scanner = new Scanner(System.in);
 
-    public static String inputAnimal() {
+    public String inputAnimal() {
         System.out.println("Пожалуйста, введите животное, которое хотите добавить");
         String inputAnimal = scanner.nextLine().toLowerCase();
 
@@ -19,7 +21,7 @@ public class AbsAnimalHandler {
         return inputAnimal;
     }
 
-    public static String inputName() {
+    public String inputName() {
         System.out.println("Как вы назовете ваше животное?");
         String inputName = scanner.nextLine();
         while (!InputValidator.validateAnimalName(inputName)) {
@@ -30,7 +32,7 @@ public class AbsAnimalHandler {
         return inputName;
     }
 
-    public static int inputAge() {
+    public int inputAge() {
         while (true) {
             System.out.println("Сколько лет вашему животному?");
             try {
@@ -46,7 +48,7 @@ public class AbsAnimalHandler {
         }
     }
 
-    public static long inputWeight() {
+    public long inputWeight() {
         while (true) {
             System.out.println("Сколько весит ваше животное?");
             try {
@@ -62,7 +64,7 @@ public class AbsAnimalHandler {
         }
     }
 
-    public static String inputColor() {
+    public String inputColor() {
         System.out.println("Какого цвета ваше животное?");
         String inputColor = scanner.nextLine().toLowerCase();
 
