@@ -1,0 +1,17 @@
+package tables;
+
+import animals.AbsAnimal;
+
+import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+public interface IDB <T>{
+    void createDataBase() throws SQLException, IOException;
+    void initializeDataBase() throws SQLException, IOException;
+    ResultSet getAnimal(String [] columns, String [] predicates) throws SQLException, IOException;
+    void addAnimalToDB(AbsAnimal animal) throws SQLException, IOException;
+    void createTable (String tableName) throws SQLException, IOException;
+    void deleteTable () throws SQLException;
+}

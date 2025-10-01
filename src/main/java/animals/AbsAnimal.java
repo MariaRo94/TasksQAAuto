@@ -61,6 +61,7 @@ public abstract class AbsAnimal {
         this.color = color;
     }
 
+
     private String getAgeContext(int age) {
         int lastDigit = age % 10;
         int lastTwoDigits = age % 100;

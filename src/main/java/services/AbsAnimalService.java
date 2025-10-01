@@ -5,12 +5,16 @@ import handlers.AbsAnimalHandler;
 import animals.Cat;
 import animals.Dog;
 import animals.Duck;
+import tables.AnimalTable;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 
 public class AbsAnimalService {
     static ArrayList<AbsAnimal> absAnimalsList = new ArrayList<>();
+    AnimalTable animalTable = new AnimalTable("animals");
 
     public void addAnimal() {
         AbsAnimalHandler absAnimalHandler = new AbsAnimalHandler();
@@ -26,17 +30,24 @@ public class AbsAnimalService {
             System.out.println("Ура! Вы добавили новое животное!");
         } catch (IllegalArgumentException e) {
             System.out.println("Не удалось добавить новое животное");
+        } catch (SQLException e) {
+            throw new RuntimeException(e + "Ошибка добавления животного в базу данных");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    public AbsAnimal createNewAnimal(String animalType, String name, int age, long weight, String color) {
-        return switch (animalType.toLowerCase()) {
+    public AbsAnimal createNewAnimal(String animalType, String name, int age, long weight, String color) throws SQLException, IOException {
+        AbsAnimal animal =  switch (animalType.toLowerCase()) {
             case "cat" -> new Cat(name, age, weight, color);
             case "dog" -> new Dog(name, age, weight, color);
             case "duck" -> new Duck(name, age, weight, color);
             default -> throw new IllegalArgumentException("Вы ввели неизвестное животное");
         };
 
+        animalTable.addAnimalToDB(animal);
+
+        return animal;
     }
 
     public void animalsToList() {
