@@ -8,7 +8,7 @@ public class AbsAnimalHandler {
     private Scanner scanner = new Scanner(System.in);
 
     public String inputAnimal() {
-        System.out.println("Пожалуйста, введите животное, которое хотите добавить");
+        System.out.println("Пожалуйста, введите животное, которое хотите добавить или выбрать");
         String inputAnimal = scanner.nextLine().toLowerCase();
 
         while (!InputValidator.animalIsContains(inputAnimal)) {

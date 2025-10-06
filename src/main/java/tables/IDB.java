@@ -16,4 +16,6 @@ public interface IDB <T>{
     void deleteTable () throws SQLException, IOException;
     void dropDataBase () throws SQLException, IOException;
     void exitDataBase () throws SQLException, IOException;
+    ResultSet selectAllAnimals() throws SQLException, IOException;
+    int updateAnimal(int id, String name, int age, double weight) throws SQLException, IOException;
 }

@@ -62,6 +62,13 @@ public class ConsoleMenuService implements IMenuService {
                         System.out.println("Спасибо за использование нашего приложения! До скорых встреч!");
                         animalTable.exitDataBase();
                         System.exit(0);
+
+                    case EDITBYNAME:
+                        absAnimalService.editAnimal();
+                        break;
+                    case SELECTBYTYPE:
+                        absAnimalService.selectAnimal();
+                        break;
                 }
             } catch (IllegalArgumentException e) {
                 System.out.println("Вы ввели неизвестную команду");

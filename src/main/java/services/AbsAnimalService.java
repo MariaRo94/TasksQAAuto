@@ -10,6 +10,7 @@ import tables.AnimalTable;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 
 public class AbsAnimalService {
@@ -58,5 +59,50 @@ public class AbsAnimalService {
         else {
             System.out.println("Список живоных пуст");
         }
+        try {
+            animalTable.selectAllAnimals();
+            System.out.println(animalTable.selectAllAnimals());
+        } catch (SQLException | IOException e) {
+            throw new RuntimeException(e);
+        }
     }
+
+    public void editAnimal() {
+        Scanner scanner = new Scanner(System.in);
+        AbsAnimalHandler absAnimalHandler = new AbsAnimalHandler();
+        try {
+            System.out.println("Введите ID животного, которое нужно обновить:");
+            String idInput = scanner.nextLine().trim();
+            int id = Integer.parseInt(idInput);
+
+            String name = absAnimalHandler.inputName();
+            int age = absAnimalHandler.inputAge();
+            long weightLong = absAnimalHandler.inputWeight();
+            double weight = (double) weightLong;
+
+            int updated = animalTable.updateAnimal(id, name, age, weight);
+            if (updated == 0) {
+                System.out.println("Животное с таким ID не найдено или данные не изменились.");
+            } else {
+                System.out.println("Данные животного успешно обновлены.");
+                System.out.println(animalTable.updateAnimal(id, name, age, weight));
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Ошибка ввода числовых данных. Попробуйте снова.");
+        } catch (SQLException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void selectAnimal() {
+        AbsAnimalHandler absAnimalHandler = new AbsAnimalHandler();
+        String animalType = absAnimalHandler.inputAnimal();
+        try {
+            animalTable.selectAnimal(animalType);
+        } catch (SQLException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    
 }

@@ -7,6 +7,7 @@ import database.MySQLConnector;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public abstract class AbsDB<T> implements IDB<T> {
 
@@ -23,7 +24,26 @@ public abstract class AbsDB<T> implements IDB<T> {
     public ResultSet getAnimal(String[] columns, String[] predicates) throws SQLException, IOException {
 
         String columnsInRequest = columns.length == 0 ? "*" : String.join(",", columns);
-        String whereClause = predicates.length == 0 ? "" : "WHERE " + String.join(" AND ", predicates);
+
+        // Normalize simple type filters like "cat", "dog", "duck" into a proper SQL predicate
+        ArrayList<String> normalizedPredicates = new ArrayList<>();
+        for (String predicate : predicates) {
+            if (predicate == null) {
+                continue;
+            }
+            String trimmed = predicate.trim();
+            if (trimmed.isEmpty()) {
+                continue;
+            }
+            String lower = trimmed.toLowerCase();
+            if (lower.equals("cat") || lower.equals("dog") || lower.equals("duck")) {
+                normalizedPredicates.add(String.format("animal_type = '%s'", lower));
+            } else {
+                normalizedPredicates.add(trimmed);
+            }
+        }
+
+        String whereClause = normalizedPredicates.isEmpty() ? "" : "WHERE " + String.join(" AND ", normalizedPredicates);
 
         String sqlRequest = String.format("SELECT %s FROM %s %s",
                 columnsInRequest, tableName, whereClause);
@@ -106,4 +126,47 @@ public abstract class AbsDB<T> implements IDB<T> {
         dropDataBase();
         dbConnector.closeConnection();
     }
+
+    public int updateAnimal(String name, String newName, int newAge, double newWeight) throws SQLException, IOException {
+        if (name == null) {
+            throw new IllegalArgumentException("Имя животного не может быть null");
+        }
+
+        String safeName = name.replace("'", "''");
+
+        String sqlRequest = String.format(
+                "UPDATE %s.%s SET name = '%s', age = %d, weight = %f WHERE name = '%s'",
+                animalDBName,
+                tableName,
+                safeName,
+                newAge,
+                newWeight,
+                name    
+        );
+
+        return dbConnector.executeUpdate(sqlRequest);
+    }
+
+    public ResultSet selectAllAnimals() throws SQLException, IOException {
+
+        String sqlRequest = String.format("SELECT * FROM %s.%s", animalDBName, tableName);
+        return dbConnector.executeResultResponse(sqlRequest);
+    }
+
+    public ResultSet selectAnimal(String animalType) throws SQLException, IOException {
+        if (animalType == null || animalType.isBlank()) {
+            return getAnimal(new String[]{}, new String[]{});
+        }
+        String normalizedType = animalType.toLowerCase().trim();
+        switch (normalizedType) {
+            case "cat":
+            case "dog":
+            case "duck":
+                return getAnimal(new String[]{}, new String[]{normalizedType});
+            default:
+                throw new IllegalArgumentException("Неизвестный тип животного. Допустимые значения: cat, dog, duck");
+        }
+    }
+
 }
+ 
