@@ -13,5 +13,7 @@ public interface IDB <T>{
     ResultSet getAnimal(String [] columns, String [] predicates) throws SQLException, IOException;
     void addAnimalToDB(AbsAnimal animal) throws SQLException, IOException;
     void createTable (String tableName) throws SQLException, IOException;
-    void deleteTable () throws SQLException;
+    void deleteTable () throws SQLException, IOException;
+    void dropDataBase () throws SQLException, IOException;
+    void exitDataBase () throws SQLException, IOException;
 }

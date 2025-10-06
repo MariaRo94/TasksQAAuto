@@ -1,11 +1,16 @@
 package services;
 
+import tables.AnimalTable;
+
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ConsoleMenuService implements IMenuService {
     private AbsAnimalService absAnimalService = new AbsAnimalService();
     private Scanner scanner = new Scanner(System.in);
+    private static AnimalTable animalTable = new AnimalTable("animals");
 
     public ConsoleMenuService(AbsAnimalService absAnimalService, Scanner scanner) {
         this.absAnimalService = absAnimalService;
@@ -55,11 +60,16 @@ public class ConsoleMenuService implements IMenuService {
                         break;
                     case EXIT:
                         System.out.println("Спасибо за использование нашего приложения! До скорых встреч!");
+                        animalTable.exitDataBase();
                         System.exit(0);
                 }
             } catch (IllegalArgumentException e) {
                 System.out.println("Вы ввели неизвестную команду");
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-        }
+    }
     }
 

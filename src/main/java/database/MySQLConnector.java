@@ -25,6 +25,7 @@ public class MySQLConnector implements IDBConnector {
         if (statement == null) {
             statement = connection.createStatement();
         }
+        System.out.println("Соединение с базой данных установлено");
     }
 
     public void execute(String sqlRequest) throws SQLException, IOException {
@@ -49,6 +50,7 @@ public class MySQLConnector implements IDBConnector {
         if (connection != null) {
             connection.close();
         }
+        System.out.println("Соединение с базой данных закрыто");
     }
 
 }
