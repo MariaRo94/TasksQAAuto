@@ -5,7 +5,6 @@ import animals.AbsAnimal;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
 public interface IDB <T>{
     void createDataBase() throws SQLException, IOException;

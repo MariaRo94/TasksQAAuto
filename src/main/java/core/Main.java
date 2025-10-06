@@ -3,7 +3,6 @@ package core;
 import animals.AbsAnimal;
 import services.AbsAnimalService;
 import services.ConsoleMenuService;
-import tables.AbsDB;
 import tables.AnimalTable;
 
 import java.io.IOException;

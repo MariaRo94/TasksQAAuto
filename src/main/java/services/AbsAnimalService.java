@@ -20,27 +20,30 @@ public class AbsAnimalService {
 
     public void addAnimal() {
         AbsAnimalHandler absAnimalHandler = new AbsAnimalHandler();
-
         String inputAnimalType = absAnimalHandler.inputAnimal();
         String inputName = absAnimalHandler.inputName();
         int inputAge = absAnimalHandler.inputAge();
         long inputWeight = absAnimalHandler.inputWeight();
         String inputColor = absAnimalHandler.inputColor();
-        try {
-            AbsAnimal newAnimal = createNewAnimal(inputAnimalType, inputName, inputAge, inputWeight, inputColor);
-            absAnimalsList.add(newAnimal);
-            System.out.println("Ура! Вы добавили новое животное!");
-        } catch (IllegalArgumentException e) {
-            System.out.println("Не удалось добавить новое животное");
-        } catch (SQLException e) {
-            throw new RuntimeException(e + "Ошибка добавления животного в базу данных");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        while (true) {
+            try {
+                AbsAnimal newAnimal = createNewAnimal(inputAnimalType, inputName, inputAge, inputWeight, inputColor);
+                absAnimalsList.add(newAnimal);
+                System.out.println("Ура! Вы добавили новое животное!");
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Неизвестный тип животного. Попробуйте снова.");
+                inputAnimalType = absAnimalHandler.inputAnimal();
+            } catch (SQLException e) {
+                throw new RuntimeException(e + "Ошибка добавления животного в базу данных");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
     public AbsAnimal createNewAnimal(String animalType, String name, int age, long weight, String color) throws SQLException, IOException {
-        AbsAnimal animal =  switch (animalType.toLowerCase()) {
+        AbsAnimal animal = switch (animalType.toLowerCase()) {
             case "cat" -> new Cat(name, age, weight, color);
             case "dog" -> new Dog(name, age, weight, color);
             case "duck" -> new Duck(name, age, weight, color);
@@ -75,7 +78,6 @@ public class AbsAnimalService {
             String idInput = scanner.nextLine().trim();
             int id = Integer.parseInt(idInput);
 
-            // Check existence before asking for new values
             ResultSet existing = animalTable.getAnimal(new String[]{"id"}, new String[]{"id = " + id});
             if (!existing.next()) {
                 System.out.println("Ошибка: Животного с таким ID нет в базе данных.");
@@ -104,10 +106,16 @@ public class AbsAnimalService {
     public void selectAnimal() {
         AbsAnimalHandler absAnimalHandler = new AbsAnimalHandler();
         String animalType = absAnimalHandler.inputAnimal();
-        try {
-            printResultSet(animalTable.selectAnimalByType(animalType), "\nРезультаты фильтрации по типу: " + animalType.toLowerCase());
-        } catch (SQLException | IOException e) {
-            throw new RuntimeException(e);
+        while (true) {
+            try {
+                printResultSet(animalTable.selectAnimalByType(animalType), "\nРезультаты фильтрации по типу: " + animalType.toLowerCase());
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Неизвестный тип животного. Попробуйте снова.");
+                animalType = absAnimalHandler.inputAnimal();
+            } catch (SQLException | IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -129,6 +137,4 @@ public class AbsAnimalService {
             System.out.println("Нет записей.");
         }
     }
-    
-    
 }

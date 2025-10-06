@@ -184,10 +184,6 @@ public abstract class AbsDB<T> implements IDB<T> {
                 throw new IllegalArgumentException("Неизвестный тип животного. Допустимые значения: cat, dog, duck");
         }
     }
-    
-    public ResultSet selectAnimal(String animalType) throws SQLException, IOException {
-        return selectAnimalByType(animalType);
-    }
 
 }
  
