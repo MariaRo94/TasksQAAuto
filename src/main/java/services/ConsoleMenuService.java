@@ -49,34 +49,34 @@ public class ConsoleMenuService implements IMenuService {
             return;
         }
 
-            try {
-                Commands command = Commands.valueOf(inputCommand);
-                switch (command) {
-                    case ADD:
-                        absAnimalService.addAnimal();
-                        break;
-                    case LIST:
-                        absAnimalService.animalsToList();
-                        break;
-                    case EXIT:
-                        System.out.println("Спасибо за использование нашего приложения! До скорых встреч!");
-                        animalTable.exitDataBase();
-                        System.exit(0);
+        try {
+            Commands command = Commands.valueOf(inputCommand);
+            switch (command) {
+                case ADD:
+                    absAnimalService.addAnimal();
+                    break;
+                case LIST:
+                    absAnimalService.animalsToList();
+                    break;
+                case EXIT:
+                    System.out.println("Спасибо за использование нашего приложения! До скорых встреч!");
+                    animalTable.exitDataBase();
+                    System.exit(0);
 
-                    case EDITBYNAME:
-                        absAnimalService.editAnimal();
-                        break;
-                    case SELECTBYTYPE:
-                        absAnimalService.selectAnimal();
-                        break;
-                }
-            } catch (IllegalArgumentException e) {
-                System.out.println("Вы ввели неизвестную команду");
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+                case EDIT:
+                    absAnimalService.editAnimal();
+                    break;
+                case SELECTBYTYPE:
+                    absAnimalService.selectAnimal();
+                    break;
             }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Вы ввели неизвестную команду");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
-    }
+}
 

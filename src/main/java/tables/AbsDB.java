@@ -25,7 +25,6 @@ public abstract class AbsDB<T> implements IDB<T> {
 
         String columnsInRequest = columns.length == 0 ? "*" : String.join(",", columns);
 
-        // Normalize simple type filters like "cat", "dog", "duck" into a proper SQL predicate
         ArrayList<String> normalizedPredicates = new ArrayList<>();
         for (String predicate : predicates) {
             if (predicate == null) {
@@ -45,8 +44,8 @@ public abstract class AbsDB<T> implements IDB<T> {
 
         String whereClause = normalizedPredicates.isEmpty() ? "" : "WHERE " + String.join(" AND ", normalizedPredicates);
 
-        String sqlRequest = String.format("SELECT %s FROM %s %s",
-                columnsInRequest, tableName, whereClause);
+        String sqlRequest = String.format("SELECT %s FROM %s.%s %s",
+                columnsInRequest, animalDBName, tableName, whereClause);
 
         return dbConnector.executeResultResponse(sqlRequest);
     }
@@ -132,16 +131,34 @@ public abstract class AbsDB<T> implements IDB<T> {
             throw new IllegalArgumentException("Имя животного не может быть null");
         }
 
-        String safeName = name.replace("'", "''");
-
         String sqlRequest = String.format(
                 "UPDATE %s.%s SET name = '%s', age = %d, weight = %f WHERE name = '%s'",
                 animalDBName,
                 tableName,
-                safeName,
+                newName.replace("'", "''"),
                 newAge,
                 newWeight,
-                name    
+                name.replace("'", "''")
+        );
+
+        return dbConnector.executeUpdate(sqlRequest);
+    }
+
+    public int updateAnimal(int id, String name, int age, double weight) throws SQLException, IOException {
+        if (name == null) {
+            throw new IllegalArgumentException("Имя животного не может быть null");
+        }
+
+        String safeName = name.replace("'", "''");
+
+        String sqlRequest = String.format(
+                "UPDATE %s.%s SET name = '%s', age = %d, weight = %f WHERE id = %d",
+                animalDBName,
+                tableName,
+                safeName,
+                age,
+                weight,
+                id
         );
 
         return dbConnector.executeUpdate(sqlRequest);
@@ -153,7 +170,7 @@ public abstract class AbsDB<T> implements IDB<T> {
         return dbConnector.executeResultResponse(sqlRequest);
     }
 
-    public ResultSet selectAnimal(String animalType) throws SQLException, IOException {
+    public ResultSet selectAnimalByType(String animalType) throws SQLException, IOException {
         if (animalType == null || animalType.isBlank()) {
             return getAnimal(new String[]{}, new String[]{});
         }
@@ -166,6 +183,10 @@ public abstract class AbsDB<T> implements IDB<T> {
             default:
                 throw new IllegalArgumentException("Неизвестный тип животного. Допустимые значения: cat, dog, duck");
         }
+    }
+    
+    public ResultSet selectAnimal(String animalType) throws SQLException, IOException {
+        return selectAnimalByType(animalType);
     }
 
 }

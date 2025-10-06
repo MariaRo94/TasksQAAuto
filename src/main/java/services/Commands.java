@@ -1,5 +1,5 @@
 package services;
 
 public enum Commands {
-    ADD, LIST, EXIT, SELECTBYTYPE, EDITBYNAME;
+    ADD, LIST, EXIT, SELECTBYTYPE, EDIT;
 }

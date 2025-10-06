@@ -24,7 +24,7 @@ public class Main {
         }
     }
 
-    public static void main(String[] args) throws SQLException, IOException {
+    public static void main(String[] args)  {
         Scanner scanner = new Scanner(System.in);
         AbsAnimalService animalService = new AbsAnimalService();
         ConsoleMenuService consoleMenuService = new ConsoleMenuService(animalService, scanner);

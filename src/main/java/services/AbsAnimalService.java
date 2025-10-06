@@ -9,6 +9,7 @@ import tables.AnimalTable;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -60,8 +61,7 @@ public class AbsAnimalService {
             System.out.println("Список живоных пуст");
         }
         try {
-            animalTable.selectAllAnimals();
-            System.out.println(animalTable.selectAllAnimals());
+            printResultSet(animalTable.selectAllAnimals(), "\nВсе животные в базе данных:");
         } catch (SQLException | IOException e) {
             throw new RuntimeException(e);
         }
@@ -75,6 +75,13 @@ public class AbsAnimalService {
             String idInput = scanner.nextLine().trim();
             int id = Integer.parseInt(idInput);
 
+            // Check existence before asking for new values
+            ResultSet existing = animalTable.getAnimal(new String[]{"id"}, new String[]{"id = " + id});
+            if (!existing.next()) {
+                System.out.println("Ошибка: Животного с таким ID нет в базе данных.");
+                return;
+            }
+
             String name = absAnimalHandler.inputName();
             int age = absAnimalHandler.inputAge();
             long weightLong = absAnimalHandler.inputWeight();
@@ -85,7 +92,7 @@ public class AbsAnimalService {
                 System.out.println("Животное с таким ID не найдено или данные не изменились.");
             } else {
                 System.out.println("Данные животного успешно обновлены.");
-                System.out.println(animalTable.updateAnimal(id, name, age, weight));
+                printResultSet(animalTable.getAnimal(new String[]{}, new String[]{"id = " + id}), "Обновлено:");
             }
         } catch (NumberFormatException e) {
             System.out.println("Ошибка ввода числовых данных. Попробуйте снова.");
@@ -98,9 +105,28 @@ public class AbsAnimalService {
         AbsAnimalHandler absAnimalHandler = new AbsAnimalHandler();
         String animalType = absAnimalHandler.inputAnimal();
         try {
-            animalTable.selectAnimal(animalType);
+            printResultSet(animalTable.selectAnimalByType(animalType), "\nРезультаты фильтрации по типу: " + animalType.toLowerCase());
         } catch (SQLException | IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void printResultSet(ResultSet resultSet, String header) throws SQLException {
+        System.out.println(header);
+        boolean hasRows = false;
+        while (resultSet.next()) {
+            hasRows = true;
+            int id = resultSet.getInt("id");
+            String name = resultSet.getString("name");
+            int age = resultSet.getInt("age");
+            String weight = resultSet.getString("weight");
+            String color = resultSet.getString("color");
+            String type = resultSet.getString("animal_type");
+            System.out.printf("ID: %d | name=%s | age=%d | weight=%s | color=%s | type=%s%n",
+                    id, name, age, weight, color, type);
+        }
+        if (!hasRows) {
+            System.out.println("Нет записей.");
         }
     }
     
