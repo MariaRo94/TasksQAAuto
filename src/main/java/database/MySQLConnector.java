@@ -12,20 +12,36 @@ import java.util.Map;
 
 public class MySQLConnector implements IDBConnector {
 
-    private PropertiesConfigReader propertiesConfigReader = new PropertiesConfigReader();
+    private static MySQLConnector instance = null;
+    private static final PropertiesConfigReader propertiesConfigReader = new PropertiesConfigReader();
 
-    private Connection connection = null;
-    private Statement statement = null;
+    private static Connection connection = null;
+    private static Statement statement = null;
+
+    public MySQLConnector() {
+    }
+
+    public static synchronized MySQLConnector getInstance() {
+        if (instance == null) {
+            instance = new MySQLConnector();
+        }
+        return instance;
+    }
+
+    private static synchronized Connection getConnection() throws SQLException, IOException {
+        if (connection == null || connection.isClosed()) {
+            Map<String, String> creds = propertiesConfigReader.getCredentials();
+            connection = DriverManager.getConnection(creds.get("URL"), creds.get("USER"), creds.get("PASSWORD"));
+            System.out.println("Соединение с базой данных установлено");
+        }
+        return connection;
+    }
 
     public void tryConnection() throws SQLException, IOException {
-        Map<String, String > creds = propertiesConfigReader.getCredentials();
-        if (connection == null) {
-            connection = DriverManager.getConnection(creds.get("URL"), creds.get("USER"), creds.get("PASSWORD"));
-        }
+        Connection connection = getConnection();
         if (statement == null) {
             statement = connection.createStatement();
         }
-        System.out.println("Соединение с базой данных установлено");
     }
 
     public void execute(String sqlRequest) throws SQLException, IOException {
@@ -33,7 +49,7 @@ public class MySQLConnector implements IDBConnector {
         statement.execute(sqlRequest);
     }
 
-    public ResultSet executeResultResponse(String sqlRequest) throws SQLException, IOException{
+    public ResultSet executeResultResponse(String sqlRequest) throws SQLException, IOException {
         tryConnection();
         return statement.executeQuery(sqlRequest);
     }
@@ -46,11 +62,24 @@ public class MySQLConnector implements IDBConnector {
     public void closeConnection() throws SQLException {
         if (statement != null) {
             statement.close();
+            statement = null;
         }
         if (connection != null) {
             connection.close();
+            connection = null;
         }
         System.out.println("Соединение с базой данных закрыто");
+    }
+
+    public static synchronized void resetInstance() {
+        if (instance != null) {
+            try {
+                instance.closeConnection();
+            } catch (SQLException e) {
+                System.err.println("Ошибка закрытия соединения во время сброса: " + e.getMessage());
+            }
+            instance = null;
+        }
     }
 
 }

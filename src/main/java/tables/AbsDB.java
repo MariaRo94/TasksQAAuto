@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public abstract class AbsDB<T> implements IDB<T> {
 
-    private IDBConnector dbConnector = new MySQLConnector();
+    public IDBConnector dbConnector = MySQLConnector.getInstance();
 
     String tableName;
     String animalDBName;
@@ -66,7 +66,6 @@ public abstract class AbsDB<T> implements IDB<T> {
 
         String useDb = "USE animals_db";
         dbConnector.execute(useDb);
-        System.out.println("База данных успешно создана");
 
     }
 
@@ -103,7 +102,6 @@ public abstract class AbsDB<T> implements IDB<T> {
                 "animal_type VARCHAR(10)" +
                 ");", tableName);
         dbConnector.execute(sqlStatement);
-        System.out.println("Таблица создана");
     }
 
     @Override
@@ -126,23 +124,6 @@ public abstract class AbsDB<T> implements IDB<T> {
         dbConnector.closeConnection();
     }
 
-    public int updateAnimal(String name, String newName, int newAge, double newWeight) throws SQLException, IOException {
-        if (name == null) {
-            throw new IllegalArgumentException("Имя животного не может быть null");
-        }
-
-        String sqlRequest = String.format(
-                "UPDATE %s.%s SET name = '%s', age = %d, weight = %f WHERE name = '%s'",
-                animalDBName,
-                tableName,
-                newName.replace("'", "''"),
-                newAge,
-                newWeight,
-                name.replace("'", "''")
-        );
-
-        return dbConnector.executeUpdate(sqlRequest);
-    }
 
     public int updateAnimal(int id, String name, int age, double weight) throws SQLException, IOException {
         if (name == null) {
